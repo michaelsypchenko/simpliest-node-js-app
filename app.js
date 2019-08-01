@@ -3,25 +3,31 @@ const https = require('https');
 const http = require('http');
 
 
-http.createServer(function(request, response){
+http.createServer(function(request, response1){
 
-    https.get('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', (resp) => {
-        let data = '';
+    var username = 'michaelsypchenko';
 
-        // A chunk of data has been recieved.
-        resp.on('data', (chunk) => {
-            data += chunk;
+    var options = {
+        host: 'api.github.com',
+        path: '/users/' + username,
+        // path: '/users/' + username + '/repos',
+        method: 'GET',
+        headers: {'user-agent': 'node.js'}
+    };
+
+    var request = https.request(options, function(response){
+        var body = '';
+        response.on("data", function(chunk){
+            body += chunk.toString('utf8');
         });
 
-        // The whole response has been received. Print out the result.
-        resp.on('end', () => {
-            response.end("Hello my world! \n\n" + JSON.parse(data).explanation);
-            console.log(JSON.parse(data).explanation);
+        response.on("end", function(){
+            console.log("Body: ", body);
+            //JSON.parse(body)
+            response1.end("Hello my world! \n\n" + body);
         });
-
-    }).on("error", (err) => {
-        console.log("Error: " + err.message);
-        response.end("Error: ");
-
     });
+
+    request.end();
+
 }).listen(3000);
