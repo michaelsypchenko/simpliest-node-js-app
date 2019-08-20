@@ -1,33 +1,83 @@
+var http = require('http');
+var url = require('url');
+var querystring = require('querystring');
+var static = require('node-static');
 
-const https = require('https');
-const http = require('http');
+var fileServer = new static.Server('.');
 
+var subscribers = {};
 
-http.createServer(function(request, response1){
+function onSubscribe(req, res) {
+    var id = Math.random();
 
-    var username = 'michaelsypchenko';
+    res.setHeader('Content-Type', 'text/plain;charset=utf-8');
+    res.setHeader("Cache-Control", "no-cache, must-revalidate");
 
-    var options = {
-        host: 'api.github.com',
-        path: '/users/' + username,
-        // path: '/users/' + username + '/repos',
-        method: 'GET',
-        headers: {'user-agent': 'node.js'}
-    };
+    subscribers[id] = res;
+    //console.log("новый клиент " + id + ", клиентов:" + Object.keys(subscribers).length);
 
-    var request = https.request(options, function(response){
-        var body = '';
-        response.on("data", function(chunk){
-            body += chunk.toString('utf8');
-        });
-
-        response.on("end", function(){
-            console.log("Body: ", body);
-            //JSON.parse(body)
-            response1.end("Hello my world! \n\n" + body);
-        });
+    req.on('close', function() {
+        delete subscribers[id];
+        //console.log("клиент "+id+" отсоединился, клиентов:" + Object.keys(subscribers).length);
     });
 
-    request.end();
+}
 
-}).listen(3000);
+function publish(message) {
+
+    //console.log("есть сообщение, клиентов:" + Object.keys(subscribers).length);
+
+    for (var id in subscribers) {
+        //console.log("отсылаю сообщение " + id);
+        var res = subscribers[id];
+        res.end(message);
+    }
+
+    subscribers = {};
+}
+
+function accept(req, res) {
+    var urlParsed = url.parse(req.url, true);
+
+    // новый клиент хочет получать сообщения
+    if (urlParsed.pathname == '/subscribe') {
+        onSubscribe(req, res); // собственно, подписка
+        return;
+    }
+
+    // отправка сообщения
+    if (urlParsed.pathname == '/publish' && req.method == 'POST') {
+        // принять POST-запрос
+        req.setEncoding('utf8');
+        var message = '';
+        req.on('data', function(chunk) {
+            message += chunk;
+        }).on('end', function() {
+            publish(message); // собственно, отправка
+            res.end("ok");
+        });
+
+        return;
+    }
+
+    // всё остальное -- статика
+    fileServer.serve(req, res);
+
+}
+
+
+// -----------------------------------
+
+if (!module.parent) {
+    http.createServer(accept).listen(3000);
+    console.log('Сервер запущен на порту 3000');
+} else {
+    exports.accept = accept;
+
+    process.on('SIGINT', function() {
+        for (var id in subscribers) {
+            var res = subscribers[id];
+            res.end();
+        }
+    });
+}
