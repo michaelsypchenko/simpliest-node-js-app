@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2e49bb23-8884-4205-aee1-f06b487fa8b4" name="Default" comment="turn to &quot;roots&quot;">
-      <change afterPath="$PROJECT_DIR$/.circleci/config.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -74,7 +74,7 @@
       <workItem from="1564653222460" duration="1168000" />
       <workItem from="1564655249031" duration="1082000" />
       <workItem from="1566285616777" duration="212000" />
-      <workItem from="1583483929128" duration="764000" />
+      <workItem from="1583483929128" duration="1222000" />
     </task>
     <task id="LOCAL-00001" summary="asdfas">
       <created>1564642076799</created>
@@ -104,7 +104,21 @@
       <option name="project" value="LOCAL" />
       <updated>1583484231022</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="turn to &quot;roots&quot;">
+      <created>1583484890892</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1583484890893</updated>
+    </task>
+    <task id="LOCAL-00006" summary="turn to &quot;roots&quot;">
+      <created>1583485092070</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1583485092070</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
